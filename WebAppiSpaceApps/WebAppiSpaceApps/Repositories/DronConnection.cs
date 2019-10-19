@@ -52,7 +52,7 @@ namespace WebAppiSpaceApps.Repositories
         {
             // 1) ESTABLECEMOS LA DIRECCIÓN IP DE LA MÁQUINA 
             IPHostEntry ipHostInfo = Dns.GetHostEntry(DronIp);
-            IPAddress ipAddress = ipHostInfo.AddressList[0];
+            IPAddress ipAddress = ipHostInfo.AddressList[1];
             IPEndPoint remoteEP = new IPEndPoint(ipAddress, Port);
 
             // 2) CREAMOS EL SOCKET 
