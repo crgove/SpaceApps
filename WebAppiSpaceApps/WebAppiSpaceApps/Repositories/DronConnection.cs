@@ -10,19 +10,24 @@ using WebAppiSpaceApps.Models;
 
 namespace WebAppiSpaceApps.Repositories
 {
-    public static class DronConnection //ESTABLECER LA CONEXION Y ENVIAR LOS DATOS 
+    public class DronConnection //ESTABLECER LA CONEXION Y ENVIAR LOS DATOS 
     {
-        public static string DronIp { get; set; }
-        public static int Port { get; set; }
-        private static Socket Client { get; set; }
+        // Singleton
+        static private DronConnection shared = null;
+        public static DronConnection Shared { get { shared = shared == null ? new DronConnection() : shared; return shared;  } }
+        private DronConnection() { }
 
-        private static bool isConnected = false;
+        public string DronIp { get; set; }
+        public int Port { get; set; }
+        private Socket Client { get; set; }
 
-        private static String response = "";
+        private bool isConnected = false;
+
+        private String response = "";
         // Semaforos
-        private static ManualResetEvent connectDone = new ManualResetEvent(false);
-        private static ManualResetEvent sendDone = new ManualResetEvent(false);
-        private static ManualResetEvent receiveDone = new ManualResetEvent(false);
+        private ManualResetEvent connectDone = new ManualResetEvent(false);
+        private ManualResetEvent sendDone = new ManualResetEvent(false);
+        private ManualResetEvent receiveDone = new ManualResetEvent(false);
 
 
         public class StateObject
@@ -37,7 +42,7 @@ namespace WebAppiSpaceApps.Repositories
         /*
          * La función inciara una conexión con el cliente dada una Ip y un puerto 
          */
-        private static void StartClient()
+        private void StartClient()
         {
             // 1) ESTABLECEMOS LA DIRECCIÓN IP DE LA MÁQUINA 
             IPHostEntry ipHostInfo = Dns.GetHostEntry(DronIp);
@@ -57,7 +62,7 @@ namespace WebAppiSpaceApps.Repositories
             isConnected = true;
         }
 
-        private static void ConnectCallback(IAsyncResult ar)
+        private void ConnectCallback(IAsyncResult ar)
         {
             try
             {
@@ -82,7 +87,7 @@ namespace WebAppiSpaceApps.Repositories
 
 
         #region SendMessage
-        private static string SendMessage(ParamsDron paramsDron)
+        public string SendMessage(ParamsDron paramsDron)
         {
             if (!isConnected)
             {
@@ -118,7 +123,7 @@ namespace WebAppiSpaceApps.Repositories
             return response;
         }
 
-        private static void ReceiveCallback(IAsyncResult ar)
+        private void ReceiveCallback(IAsyncResult ar)
         {
             try
             {
@@ -156,7 +161,7 @@ namespace WebAppiSpaceApps.Repositories
             }
         }
 
-        private static void SendCallback(IAsyncResult ar)
+        private void SendCallback(IAsyncResult ar)
         {
             try
             {
@@ -177,16 +182,10 @@ namespace WebAppiSpaceApps.Repositories
         }
         #endregion
 
-        private static void CloseClient()
+        private void CloseClient()
         {
             Client.Shutdown(SocketShutdown.Both);
             Client.Close();
         }
-
-        public static void SendData(ParamsDron paramsDron)
-        {
-
-        }
-
     }
 }

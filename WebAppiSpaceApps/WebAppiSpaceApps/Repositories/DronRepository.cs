@@ -12,23 +12,31 @@ namespace WebAppiSpaceApps.Repositories
 {
     public class DronRepository
     {
+        // Singleton
+        private static DronRepository shared = null;
+        public static DronRepository Shared {
+            get {
+                if (shared == null) {
+                    shared = new DronRepository();
 
-        public static ResultsDron RefreshState(ParamsDron paramsDron) //ENVIA LOS DATOS, LOS SIMULA Y DEVUELVE LOS RESULTADOS. LLAMARA A LAS OTRAS FUNCIONES
-        {
+                    shared.connection.DronIp = "";
+                    shared.connection.Port = 9182;
 
-        }
-
-        protected static class DronSimulator //SIMULA EL DRON
-        {
-            public static ResultsDron Simulate(ParamsDron paramsDron)
-            {
-
+                    shared.simulator = DronSimulator.Shared;
+                }
+                return shared;
             }
-            
         }
 
-        
+        // Props
+        private DronConnection connection;
+        private DronSimulator simulator;
 
-        
+
+        public ResultsDron RefreshState(ParamsDron paramsDron) //ENVIA LOS DATOS, LOS SIMULA Y DEVUELVE LOS RESULTADOS. LLAMARA A LAS OTRAS FUNCIONES
+        {
+            connection.SendMessage(paramsDron);
+            return simulator.Simulate(paramsDron);
+        }
     }
 }

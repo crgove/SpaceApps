@@ -14,11 +14,9 @@ namespace WebAppiSpaceApps.Controllers
     public class DronController : ControllerBase
     {
         [HttpPost]
-        public void Post([FromBody] ParamsDron paramDron)
+        public ResultsDron Post([FromBody] ParamsDron paramDron)
         {
-            var SolicitudDron = new DronRepository();
-
-
+            return DronRepository.Shared.RefreshState(paramDron);
         }
     }
 }
