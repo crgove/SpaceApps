@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using WebAppiSpaceApps.Models;
 using WebAppiSpaceApps.Repositories;
 
@@ -13,10 +8,17 @@ namespace WebAppiSpaceApps.Controllers
     [ApiController]
     public class DronController : ControllerBase
     {
-        [HttpPost]
+        [HttpPost("status")]
         public ResultsDron Post([FromBody] ParamsDron paramDron)
         {
             return DronRepository.Shared.RefreshState(paramDron);
+        }
+
+        [HttpPut("dir")]
+        public void Put([FromBody] DirectionDron directionDron)
+        {
+            DronRepository.Shared.SetDronDir(directionDron);
+            DronRepository.Shared.StartFly();
         }
     }
 }

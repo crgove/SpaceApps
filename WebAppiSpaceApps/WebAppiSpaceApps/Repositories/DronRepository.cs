@@ -1,12 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using WebAppiSpaceApps.Models;
-using System.Net.Sockets;
-using System.Net;
-using System.Threading;
-using System.Text;
+﻿using WebAppiSpaceApps.Models;
 
 namespace WebAppiSpaceApps.Repositories
 {
@@ -20,9 +12,6 @@ namespace WebAppiSpaceApps.Repositories
                     shared = new DronRepository();
 
                     shared.connection = DronConnection.Shared;
-                    shared.connection.DronIp = "";
-                    shared.connection.Port = 9182;
-
                     shared.simulator = DronSimulator.Shared;
                 }
                 return shared;
@@ -37,7 +26,19 @@ namespace WebAppiSpaceApps.Repositories
         public ResultsDron RefreshState(ParamsDron paramsDron) //ENVIA LOS DATOS, LOS SIMULA Y DEVUELVE LOS RESULTADOS. LLAMARA A LAS OTRAS FUNCIONES
         {
             connection.SendMessage(paramsDron);
-            return simulator.Simulate(paramsDron);
+            simulator.Simulate(paramsDron);
+            return simulator.GetOutput();
+        }
+
+        public void SetDronDir(DirectionDron directionDron)
+        {
+            connection.DronIp = directionDron.Ip;
+            connection.Port = directionDron.Port;
+        }
+
+        public void StartFly()
+        {
+            simulator.InitVuelo();
         }
     }
 }

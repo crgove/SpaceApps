@@ -1,11 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Net;
 using System.Net.Sockets;
 using System.Text;
 using System.Threading;
-using System.Threading.Tasks;
 using WebAppiSpaceApps.Models;
 
 namespace WebAppiSpaceApps.Repositories
@@ -23,7 +20,6 @@ namespace WebAppiSpaceApps.Repositories
         public int Port { get; set; }
 
         // Private attributes
-        private Socket Client { get; set; }
         private bool isConnected = false;
         private string response = "";
 
@@ -48,7 +44,7 @@ namespace WebAppiSpaceApps.Repositories
         /*
          * La función inciara una conexión con el cliente dada una Ip y un puerto 
          */
-        private void StartClient()
+        private Socket StartClient()
         {
             // 1) ESTABLECEMOS LA DIRECCIÓN IP DE LA MÁQUINA 
             IPHostEntry ipHostInfo = Dns.GetHostEntry(DronIp);
@@ -56,16 +52,18 @@ namespace WebAppiSpaceApps.Repositories
             IPEndPoint remoteEP = new IPEndPoint(ipAddress, Port);
 
             // 2) CREAMOS EL SOCKET 
-            Client = new Socket(ipAddress.AddressFamily,
+            Socket client = new Socket(ipAddress.AddressFamily,
                 SocketType.Stream,
                 ProtocolType.Tcp);
 
             // 3) REALIZAMOS LA CONEXIÓN 
-            Client.BeginConnect(remoteEP,
-                new AsyncCallback(ConnectCallback), Client);
+            client.BeginConnect(remoteEP,
+                new AsyncCallback(ConnectCallback), client);
 
             connectDone.WaitOne();
             isConnected = true;
+
+            return client;
         }
 
         private void ConnectCallback(IAsyncResult ar)
@@ -94,18 +92,15 @@ namespace WebAppiSpaceApps.Repositories
         #region SendMessage
         public string SendMessage(ParamsDron paramsDron)
         {
-            if (!isConnected)
-            {
-                StartClient();
-            }
+            Socket client = StartClient();
 
             // Generamos la data
-            string data = $"x={paramsDron.HorizontalAxis.ToString()};y={paramsDron.VerticalAxis.ToString()}";
+            string data = $"alp={paramsDron.Alp.ToString()};bet={paramsDron.Bet.ToString()}";
             byte[] byteData = Encoding.ASCII.GetBytes(data);
 
             // Enviamos la data
-            Client.BeginSend(byteData, 0, byteData.Length, 0,
-                new AsyncCallback(SendCallback), Client);
+            client.BeginSend(byteData, 0, byteData.Length, 0,
+                new AsyncCallback(SendCallback), client);
             sendDone.WaitOne();
 
             // Recibimos la data
@@ -113,10 +108,10 @@ namespace WebAppiSpaceApps.Repositories
             {
                 // Creamos el object stateObject
                 StateObject state = new StateObject();
-                state.workSocket = Client;
+                state.workSocket = client;
 
                 // Begin receiving the data from the remote device.  
-                Client.BeginReceive(state.buffer, 0, StateObject.BufferSize, 0,
+                client.BeginReceive(state.buffer, 0, StateObject.BufferSize, 0,
                     new AsyncCallback(ReceiveCallback), state);
             }
             catch (Exception e)
@@ -124,7 +119,7 @@ namespace WebAppiSpaceApps.Repositories
                 Console.WriteLine(e.ToString());
             }
 
-            CloseClient();
+            CloseClient(client);
             return response;
         }
 
@@ -187,10 +182,16 @@ namespace WebAppiSpaceApps.Repositories
         }
         #endregion
 
-        private void CloseClient()
+        private void CloseClient(Socket client)
         {
-            Client.Shutdown(SocketShutdown.Both);
-            Client.Close();
+            try {
+                client.Shutdown(SocketShutdown.Both);
+                client.Close();
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
+            }
         }
     }
 }
