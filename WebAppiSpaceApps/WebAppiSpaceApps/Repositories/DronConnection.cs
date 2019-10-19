@@ -10,26 +10,31 @@ using WebAppiSpaceApps.Models;
 
 namespace WebAppiSpaceApps.Repositories
 {
-    public class DronConnection //ESTABLECER LA CONEXION Y ENVIAR LOS DATOS 
+    public class DronConnection // Establecer la conexión y enviar los datos
     {
+        #region Vars
         // Singleton
         static private DronConnection shared = null;
         public static DronConnection Shared { get { shared = shared == null ? new DronConnection() : shared; return shared;  } }
         private DronConnection() { }
 
+        // Props
         public string DronIp { get; set; }
         public int Port { get; set; }
+
+        // Private attributes
         private Socket Client { get; set; }
-
         private bool isConnected = false;
+        private string response = "";
 
-        private String response = "";
-        // Semaforos
+        // Semaphors
         private ManualResetEvent connectDone = new ManualResetEvent(false);
         private ManualResetEvent sendDone = new ManualResetEvent(false);
         private ManualResetEvent receiveDone = new ManualResetEvent(false);
+        #endregion
 
 
+        #region StateObject
         public class StateObject
         {
             public Socket workSocket = null;
@@ -37,6 +42,7 @@ namespace WebAppiSpaceApps.Repositories
             public byte[] buffer = new byte[BufferSize];
             public StringBuilder sb = new StringBuilder();
         }
+        #endregion
 
         #region StartClient
         /*
@@ -84,7 +90,6 @@ namespace WebAppiSpaceApps.Repositories
             }
         }
         #endregion
-
 
         #region SendMessage
         public string SendMessage(ParamsDron paramsDron)

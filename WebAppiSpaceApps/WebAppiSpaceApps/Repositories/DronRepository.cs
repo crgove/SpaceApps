@@ -19,6 +19,7 @@ namespace WebAppiSpaceApps.Repositories
                 if (shared == null) {
                     shared = new DronRepository();
 
+                    shared.connection = DronConnection.Shared;
                     shared.connection.DronIp = "";
                     shared.connection.Port = 9182;
 
