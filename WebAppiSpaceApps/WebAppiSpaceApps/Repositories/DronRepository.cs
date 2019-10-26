@@ -25,7 +25,8 @@ namespace WebAppiSpaceApps.Repositories
 
         public ResultsDron RefreshState(ParamsDron paramsDron) //ENVIA LOS DATOS, LOS SIMULA Y DEVUELVE LOS RESULTADOS. LLAMARA A LAS OTRAS FUNCIONES
         {
-            connection.SendMessage(paramsDron);
+            //connection.SendMessage(paramsDron);  TEMPORAL (TO DO)
+            
             simulator.Simulate(paramsDron);
             return simulator.GetOutput();
         }
