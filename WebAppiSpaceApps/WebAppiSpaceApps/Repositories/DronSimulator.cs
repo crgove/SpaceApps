@@ -146,7 +146,7 @@ namespace WebAppiSpaceApps.Repositories
                 The = vectorEstado[(int)nombreVariables.the],
                 Phi = vectorEstado[(int)nombreVariables.phi],
                 Alp = vectorEstado[(int)nombreVariables.alp],
-                Q = vectorEstado[(int)nombreVariables.q]
+                Q = vectorEstado[(int)nombreVariables.q],
             };
         }
 
@@ -168,25 +168,25 @@ namespace WebAppiSpaceApps.Repositories
             derivadasEstabilidad[0, 4] = 0.000000;
             derivadasEstabilidad[0, 5] = 0.000000;
 
-            derivadasEstabilidad[1, 0] = 0.0;
-            derivadasEstabilidad[1, 1] = 0.433185;
-            derivadasEstabilidad[1, 2] = 0.085422;
-            derivadasEstabilidad[1, 3] = 0.0;
-            derivadasEstabilidad[1, 4] = -0.010486;
+            derivadasEstabilidad[1, 0] = -0.000000;
+            derivadasEstabilidad[1, 1] = -0.855707;
+            derivadasEstabilidad[1, 2] = -0.340108;
+            derivadasEstabilidad[1, 3] = -0.000000;
+            derivadasEstabilidad[1, 4] = 0.028242;
             derivadasEstabilidad[1, 5] = 0.000000;
 
-            derivadasEstabilidad[2, 0] = 4.896626;
-            derivadasEstabilidad[2, 1] = 0.000000;
-            derivadasEstabilidad[2, 2] = 0.000000;
-            derivadasEstabilidad[2, 3] = -0.993775/10;
-            derivadasEstabilidad[2, 4] = 0.000000;
+            derivadasEstabilidad[2, 0] = 2.442555;
+            derivadasEstabilidad[2, 1] = -0.000000;
+            derivadasEstabilidad[2, 2] = -0.000000;
+            derivadasEstabilidad[2, 3] = -0.516606;
+            derivadasEstabilidad[2, 4] = -0.000000;
             derivadasEstabilidad[2, 5] = 0.000000;
 
-            derivadasEstabilidad[3, 0] = 0.0;
-            derivadasEstabilidad[3, 1] = 0.342751;
-            derivadasEstabilidad[3, 2] = -0.056709;
+            derivadasEstabilidad[3, 0] = 0.000000;
+            derivadasEstabilidad[3, 1] = 0.030203;
+            derivadasEstabilidad[3, 2] = 0.012741;
             derivadasEstabilidad[3, 3] = 0.0;
-            derivadasEstabilidad[3, 4] = -0.012430;
+            derivadasEstabilidad[3, 4] = -0.008172;
             derivadasEstabilidad[3, 5] = 0.000000;
 
             derivadasEstabilidad[4, 0] = 0.0;
@@ -210,18 +210,18 @@ namespace WebAppiSpaceApps.Repositories
             derivadasEstabilidad[6, 4] = 0.000000;
             derivadasEstabilidad[6, 5] = 0.000000;
 
-            derivadasEstabilidad[7, 0] = 3.817564;
-            derivadasEstabilidad[7, 1] = -0.000000;
+            derivadasEstabilidad[7, 0] = 3.634085;
+            derivadasEstabilidad[7, 1] = 0.000000;
             derivadasEstabilidad[7, 2] = 0.000000;
-            derivadasEstabilidad[7, 3] = -0.464373;
+            derivadasEstabilidad[7, 3] = -1.422702;
             derivadasEstabilidad[7, 4] = 0.000000;
             derivadasEstabilidad[7, 5] = 0.000000;
 
-            derivadasEstabilidad[8, 0] = 0.0;
-            derivadasEstabilidad[8, 1] = -1.415529;
-            derivadasEstabilidad[8, 2] = 0.242913;
-            derivadasEstabilidad[8, 3] = 0.0;
-            derivadasEstabilidad[8, 4] = 0.038828;
+            derivadasEstabilidad[8, 0] = -0.000000;
+            derivadasEstabilidad[8, 1] = -1.385843;
+            derivadasEstabilidad[8, 2] = -0.528024;
+            derivadasEstabilidad[8, 3] = -0.000000;
+            derivadasEstabilidad[8, 4] = 0.043876;
             derivadasEstabilidad[8, 5] = 0.000000;
 
             derivadasControl[0, 0] = 0.051937;
