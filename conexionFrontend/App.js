@@ -8,16 +8,16 @@
 
 import React, {Component} from 'react';
 import {
-  SafeAreaView,
   StyleSheet,
-  ScrollView,
   View,
   Text,
-  StatusBar,
   TextInput,
   Button,
 } from 'react-native';
+import * as Sensors from 'react-native-sensors'
 
+
+// The class we will use to connect our frontEnd with our backend
 class Connection {
   the = 0
   phi = 0
@@ -40,7 +40,7 @@ class Connection {
   }
 
   DronRefreshState(alpha, beta){
-    fetch('https://192.168.43.219:44345/api/dron/status', {
+    fetch('https://apispaceapps.azurewebsites.net/api/dron/status', {
       method: 'POST',
       headers: {
         Accept: 'application/json',
@@ -63,11 +63,14 @@ class Connection {
 }
 
 
+const accelerometer = Sensors["accelerometer"]
+
 class App extends Component {
-  // Variables de la clase
+
   textIp = ""
   textPort = ""
   connection = new Connection
+
 
   constructor(props){
     super(props)
@@ -76,52 +79,77 @@ class App extends Component {
       connected: false, 
       the: 0.0,
       phi: 0.0,
-      alp: 0.0,
-      bet: 0.0,
+      x: 0,
+      y: 0,
+      z: 0,
       timer: null
     }
   }
 
   componentWillUnmount(){
-    clearInterval(this.state.timer)
+    if(this.state.connected){
+      clearInterval(this.state.timer)
+
+      this.state.subscription.unsubscribe();
+      this.setState({ subscription: null });
+    }
   }
 
   render(){
     if(this.state.connected) {
       return(
-        <View>
-          <Text>The = {this.state.the}</Text>
-          <Text>phi = {this.state.phi}</Text>
+        <View style = {styles.body}>
+          <View>
+            <Text>Simulation variables</Text>
+            <Text>The: {this.state.the} phi: {this.state.phi}</Text>
+          </View>
+          <View>
+            <Text>Device variables</Text>
+            <Text>bet: {this.state.x.toFixed(2)} alp: {this.state.y.toFixed(2)}</Text>
+          </View>
         </View>
       )
     }
 
     return (
-        <View>
+        <View style = {styles.body}>
           <Text>IP:</Text>
           <TextInput onChangeText={text => this.textIp = text}/>
           <Text>PORT:</Text>
           <TextInput onChangeText={text => this.textPort = text}/>
-          <Button title="Connect Me" onPress={() => {
+          <Button title="Connect Me" onPress={ () => {
+            // Making the connectión with the dron and reseting the simulation
             this.connection.DronConnection(this.textIp, this.textPort)
+            
+            // starting the accelerometer sensor
+            const subscription = accelerometer.subscribe(values => {
+              this.setState({ ...values });
+            });
+            this.setState({ subscription });
             
             this.setState({
               connected: true,
+              // every 100ms we will refresh the state of the dron
               timer: setInterval(() => {
-                await this.connection.DronRefreshState(this.state.alp, this.state.bet)
+                this.connection.DronRefreshState(this.state.y, this.state.x)
         
                 this.setState({
                   the: this.connection.the,
-                  phi: this.connection.phi
+                  phi: this.connection.phi,
                 })
-              }, 100)
-            })
+              }, 100)})
           }}/>
         </View>
     )
   }
 }
 
-
+const styles = StyleSheet.create({
+  body: {
+    justifyContent: "center",
+    alignItems: "center",
+    flex: 1
+  }
+})
 
 export default App;

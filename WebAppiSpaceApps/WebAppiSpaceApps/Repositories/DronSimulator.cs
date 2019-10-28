@@ -55,7 +55,7 @@ namespace WebAppiSpaceApps.Repositories
 
             time[1] = time[0];
             time[0] = DateTime.Now.Millisecond;
-            double dt = 0.010;//(time[0] > time[1]) ? 0.001 * (time[0] - time[1]) : 1 + (0.001 * (time[0] - time[1]));
+            double dt = (time[0] > time[1]) ? 0.001 * (time[0] - time[1]) : 1 + (0.001 * (time[0] - time[1]));
             double CL = CL0;
             double CD = 0;
             double CY = 0;

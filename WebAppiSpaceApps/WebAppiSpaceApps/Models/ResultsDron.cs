@@ -2,7 +2,7 @@
 
 namespace WebAppiSpaceApps.Models
 {
-    public class ResultsDron   //PARA REPRESENTARLOS EN LA API
+    public class ResultsDron 
     {
         public double The { get; set; }
         public double Phi { get; set; }
